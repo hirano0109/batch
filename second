@@ -21,16 +21,22 @@ rem バッチファイルが置かれたフォルダ名を取得
 set thisPath=%~dp0
 for %%1 in ("%thisPath:~0,-1%") do set folderName=%%~nx1
 
-rem フォルダ名と部分一致するフォルダを探してリスト化する
-dir /d "%folderName%" > D:\list.txt
+rem 名前が一致するフォルダを探す
+dir /d "%folderName%"
 
-rem リストのフォルダをコピー先にコピーする
-for /f %%a in (D:\list.txt) do (
-  xcopy /e "%%a" "%dest%"\
+rem フォルダの中身をすべてインポートする
+for /f %%a in (*.csv) do (
+  utlediupdt -f %folderName% -m
 )
 
-rem 管理情報インポートコマンド
-utlediupdt -f filename -m
+
+for /d %%a in ("%探し先フォルダ%\*") do (
+    for %%b in ("%%a\..") do (
+        if "%%~nxb"=="%folderName%" (
+            utlediupdt -f %folderName% -m
+        )
+    )
+)
 
 echo 終了します。
 pause
