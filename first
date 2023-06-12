@@ -1,0 +1,55 @@
+@echo off
+
+echo フォルダ名を検索して指定ディレクトリへコピーします。
+pause
+
+rem 検索ワード（企業IDを入力）
+set str="SearchStr"
+
+rem フォルダコピー元
+set src="C:\ParentDirA\ChildDirA"
+
+rem フォルダコピー先
+set dest="C:\ParentDirB\ChildDirB"
+
+rem ファイルコピー元
+set srcJson="C:\ParentDirA\ChildDirA"
+
+rem ファイルコピー先
+set dest="%dest%"
+
+echo フォルダをコピーします。
+
+rem コピー元ディレクトリへ移動
+cd "%src%"
+
+rem 検索ワードと部分一致するフォルダを探してリスト化する
+dir /d "%str%" > D:\list.txt
+
+rem リストのフォルダをコピー先にコピーする
+for /f %%a in (D:\list.txt) do (
+  xcopy /e "%%a" "%dest%"\
+)
+
+echo ファイルをコピーします。(jsonファイル)
+
+rem コピー元ディレクトリへ移動
+cd "%src%"
+
+rem 検索ワードと部分一致するファイルを探してリスト化する
+dir /d "%str%" > D:\list2.txt
+
+rem ファイル検索
+dir /b "%str%"
+
+rem ファイルコピー
+for /f %%a in (D:\list2.txt) do (
+copy "%%a" "%dest%"
+)
+
+rem 一時ファイルを削除
+del D:\list.txt
+del D:\list2.txt
+
+echo 終了します。
+pause

@@ -1,0 +1,36 @@
+@echo off
+
+echo バッチファイルが置かれたフォルダ内の想定結果.csvとOUT.csvをWinMergeで比較。
+echo フォルダ名からsvn内を検索し、IN.csvとアダプタ.csvをDataMagicにインポートします。
+pause
+
+echo WinMergeで差分を表示します。
+
+rem exeファイルのパス
+set exeFile=C:\Program Files\WinMerge\WinMergeU.exe
+rem 比較ファイル(左に表示)
+set leftFile=project\DATA-A
+rem 比較ファイル(右に表示)
+set rightFile=project\DATA-B
+rem 
+start "" "%exeFile%" /r /wl /wr "%leftFile%" "%rightFile%"
+
+echo IN.csvとアダプタ.csvをDataMagicにインポートします。
+
+rem バッチファイルが置かれたフォルダ名を取得
+set thisPath=%~dp0
+for %%1 in ("%thisPath:~0,-1%") do set folderName=%%~nx1
+
+rem フォルダ名と部分一致するフォルダを探してリスト化する
+dir /d "%folderName%" > D:\list.txt
+
+rem リストのフォルダをコピー先にコピーする
+for /f %%a in (D:\list.txt) do (
+  xcopy /e "%%a" "%dest%"\
+)
+
+rem 管理情報インポートコマンド
+utlediupdt -f filename -m
+
+echo 終了します。
+pause
