@@ -1,28 +1,41 @@
 @echo off
 
-echo バッチファイルが置かれたフォルダ内の想定結果.csvとOUT.csvをWinMergeで比較。
+echo バッチファイルが置かれているォルダ内の新旧の連携シートをWinMergeで比較。
 echo フォルダ名からsvn内を検索し、IN.csvとアダプタ.csvをDataMagicにインポートします。
 pause
-
-echo WinMergeで差分を表示します。
-
-rem exeファイルのパス
-set exeFile=C:\Program Files\WinMerge\WinMergeU.exe
-rem 比較ファイル(左に表示)
-set leftFile=project\DATA-A
-rem 比較ファイル(右に表示)
-set rightFile=project\DATA-B
-rem 
-start "" "%exeFile%" /r /wl /wr "%leftFile%" "%rightFile%"
-
-echo IN.csvとアダプタ.csvをDataMagicにインポートします。
 
 rem バッチファイルが置かれたフォルダ名を取得
 set thisPath=%~dp0
 for %%1 in ("%thisPath:~0,-1%") do set folderName=%%~nx1
 
+echo WinMergeで差分を表示します。
+
+rem exeファイルのパス
+set exeFile=C:\ProgramFiles\WinMerge\WinMergeU.exe
+
+
+cd "%folderName%"
+
+@REM rem ファイル検索
+@REM dir /b "%str%"
+
+for /f %%a in (dir /b "%str%") do (
+
+)
+
+rem 比較ファイル(左に表示)
+set leftFile=project\DATA-A
+rem 比較ファイル(右に表示)
+set rightFile=project\DATA-B
+
+rem 
+start "" "%exeFile%" /r /wl /wr "%leftFile%" "%rightFile%"
+
+echo IN.csvとアダプタ.csvをDataMagicにインポートします。
+
+
 rem 名前が一致するフォルダを探す
-dir /d "%folderName%"
+dir /d %folderName%
 
 rem フォルダの中身をすべてインポートする
 for /f %%a in (*.csv) do (
